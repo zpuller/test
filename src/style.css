@@ -4,6 +4,12 @@
     padding: 0;
 }
 
+a
+{
+    color: #ffeded;
+    text-decoration: none; /* no underline */
+}
+
 html
 {
     background: #1e1a20;

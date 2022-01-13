@@ -1,24 +1,23 @@
 import './style.css'
 import * as THREE from 'three'
-import * as dat from 'lil-gui'
+// import * as dat from 'lil-gui'
 import gsap from 'gsap'
 
 /**
  * Debug
  */
-const gui = new dat.GUI()
+// const gui = new dat.GUI()
 
 const parameters = {
     materialColor: '#ffeded'
 }
 
-gui
-    .addColor(parameters, 'materialColor')
-    .onChange(() =>
-    {
-        material.color.set(parameters.materialColor)
-        particlesMaterial.color.set(parameters.materialColor)
-    })
+// gui
+//     .addColor(parameters, 'materialColor')
+//     .onChange(() => {
+//         material.color.set(parameters.materialColor)
+//         particlesMaterial.color.set(parameters.materialColor)
+//     })
 
 /**
  * Base
@@ -46,15 +45,15 @@ const material = new THREE.MeshToonMaterial({
 // Objects
 const objectsDistance = 4
 const mesh1 = new THREE.Mesh(
-    new THREE.TorusGeometry(1, 0.4, 16, 60),
+    new THREE.TorusGeometry(1, 0.4, 64, 128),
     material
 )
 const mesh2 = new THREE.Mesh(
-    new THREE.ConeGeometry(1, 2, 32),
+    new THREE.ConeGeometry(1, 2, 128),
     material
 )
 const mesh3 = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(0.8, 0.35, 100, 16),
+    new THREE.TorusKnotGeometry(0.8, 0.35, 256, 64),
     material
 )
 
@@ -68,7 +67,7 @@ mesh3.position.y = - objectsDistance * 2
 
 scene.add(mesh1, mesh2, mesh3)
 
-const sectionMeshes = [ mesh1, mesh2, mesh3 ]
+const sectionMeshes = [mesh1, mesh2, mesh3]
 
 /**
  * Lights
@@ -84,8 +83,7 @@ scene.add(directionalLight)
 const particlesCount = 200
 const positions = new Float32Array(particlesCount * 3)
 
-for(let i = 0; i < particlesCount; i++)
-{
+for (let i = 0; i < particlesCount; i++) {
     positions[i * 3 + 0] = (Math.random() - 0.5) * 10
     positions[i * 3 + 1] = objectsDistance * 0.5 - Math.random() * objectsDistance * sectionMeshes.length
     positions[i * 3 + 2] = (Math.random() - 0.5) * 10
@@ -113,8 +111,7 @@ const sizes = {
     height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
-{
+window.addEventListener('resize', () => {
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
@@ -156,13 +153,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 let scrollY = window.scrollY
 let currentSection = 0
 
-window.addEventListener('scroll', () =>
-{
+window.addEventListener('scroll', () => {
     scrollY = window.scrollY
     const newSection = Math.round(scrollY / sizes.height)
 
-    if(newSection != currentSection)
-    {
+    if (newSection != currentSection) {
         currentSection = newSection
 
         gsap.to(
@@ -185,8 +180,7 @@ const cursor = {}
 cursor.x = 0
 cursor.y = 0
 
-window.addEventListener('mousemove', (event) =>
-{
+window.addEventListener('mousemove', (event) => {
     cursor.x = event.clientX / sizes.width - 0.5
     cursor.y = event.clientY / sizes.height - 0.5
 })
@@ -197,8 +191,7 @@ window.addEventListener('mousemove', (event) =>
 const clock = new THREE.Clock()
 let previousTime = 0
 
-const tick = () =>
-{
+const tick = () => {
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
@@ -212,8 +205,7 @@ const tick = () =>
     cameraGroup.position.y += (parallaxY - cameraGroup.position.y) * 5 * deltaTime
 
     // Animate meshes
-    for(const mesh of sectionMeshes)
-    {
+    for (const mesh of sectionMeshes) {
         mesh.rotation.x += deltaTime * 0.1
         mesh.rotation.y += deltaTime * 0.12
     }

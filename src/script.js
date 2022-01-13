@@ -64,7 +64,7 @@ const gmailMaterial = new THREE.MeshBasicMaterial({
 // Objects
 const objectsDistance = 4
 const mesh1 = new THREE.Mesh(
-    new THREE.ConeGeometry(0.5, 1.5, 64, 64),
+    new THREE.TorusGeometry(0.8, 0.4, 64, 64),
     material
 )
 mesh1.rotateZ(Math.PI)
@@ -132,7 +132,7 @@ mesh3.position.y = - objectsDistance * 2
 
 scene.add(mesh1, mesh2, mesh3)
 
-const sectionMeshes = [mesh2, mesh3]
+const sectionMeshes = [mesh1, mesh2, mesh3]
 
 /**
  * Lights
@@ -150,7 +150,7 @@ const positions = new Float32Array(particlesCount * 3)
 
 for (let i = 0; i < particlesCount; i++) {
     positions[i * 3 + 0] = (Math.random() - 0.5) * 10
-    positions[i * 3 + 1] = objectsDistance * 0.5 - Math.random() * objectsDistance * (sectionMeshes.length + 1)
+    positions[i * 3 + 1] = objectsDistance * 0.5 - Math.random() * objectsDistance * sectionMeshes.length
     positions[i * 3 + 2] = (Math.random() - 0.5) * 10
 }
 
@@ -220,23 +220,21 @@ let currentSection = 0
 
 window.addEventListener('scroll', () => {
     scrollY = window.scrollY
-    const newSection = Math.round((scrollY / sizes.height) - 1)
+    const newSection = Math.round(scrollY / sizes.height)
 
     if (newSection != currentSection) {
         currentSection = newSection
 
-        if (newSection >= 0) {
-            gsap.to(
-                sectionMeshes[currentSection].rotation,
-                {
-                    duration: 1.5,
-                    ease: 'power2.inOut',
-                    x: '+=6',
-                    y: '+=3',
-                    z: '+=1.5'
-                }
-            )
-        }
+        gsap.to(
+            sectionMeshes[currentSection].rotation,
+            {
+                duration: 1.5,
+                ease: 'power2.inOut',
+                x: '+=6',
+                y: '+=3',
+                z: '+=1.5'
+            }
+        )
     }
 })
 
@@ -271,12 +269,10 @@ const tick = () => {
     cameraGroup.position.x += (parallaxX - cameraGroup.position.x) * 5 * deltaTime
     cameraGroup.position.y += (parallaxY - cameraGroup.position.y) * 5 * deltaTime
 
-    mesh1.position.y = 0.5 * Math.sin(6 * elapsedTime)
-
     // Animate meshes
     for (const mesh of sectionMeshes) {
-        mesh.rotation.x += deltaTime * 0.1
-        mesh.rotation.y += deltaTime * 0.12
+        mesh.rotation.x += deltaTime * 0.2
+        mesh.rotation.y += deltaTime * 0.24
     }
 
     // Render

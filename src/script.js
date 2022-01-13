@@ -33,13 +33,23 @@ const scene = new THREE.Scene()
  */
 // Texture
 const textureLoader = new THREE.TextureLoader()
+
 const gradientTexture = textureLoader.load('textures/gradients/3.jpg')
 gradientTexture.magFilter = THREE.NearestFilter
+
+const linkedinTexture = textureLoader.load('textures/linkedin.png')
 
 // Material
 const material = new THREE.MeshToonMaterial({
     color: parameters.materialColor,
     gradientMap: gradientTexture
+})
+const colorMaterial = new THREE.MeshToonMaterial({
+    color: '#0077b7'
+})
+const linkedinMaterial = new THREE.MeshBasicMaterial({
+    map: linkedinTexture,
+    transparent: true
 })
 
 // Objects
@@ -48,10 +58,54 @@ const mesh1 = new THREE.Mesh(
     new THREE.TorusGeometry(1, 0.4, 64, 128),
     material
 )
-const mesh2 = new THREE.Mesh(
-    new THREE.ConeGeometry(1, 2, 128),
-    material
+
+const boxWidth = 1.5
+const boxDepth = 0.25
+const mesh2logo = new THREE.Mesh(
+    new THREE.PlaneGeometry(boxWidth, boxWidth, 128, 128),
+    linkedinMaterial
 )
+const mesh2logo2 = new THREE.Mesh(
+    new THREE.PlaneGeometry(boxWidth, boxWidth, 128, 128),
+    linkedinMaterial
+)
+mesh2logo.position.z = 0.001 + 0.5 * boxDepth
+mesh2logo2.position.z = -1 * mesh2logo.position.z
+mesh2logo2.rotation.y = Math.PI
+
+const smallBoxWidth = 0.75 * boxWidth
+const mesh2box = new THREE.Mesh(
+    new THREE.BoxGeometry(smallBoxWidth, boxWidth, boxDepth, 8, 8, 8),
+    colorMaterial
+)
+const mesh2box2 = new THREE.Mesh(
+    new THREE.BoxGeometry(boxWidth, smallBoxWidth, boxDepth, 8, 8, 8),
+    colorMaterial
+)
+
+const mesh2 = new THREE.Group()
+mesh2.add(mesh2logo)
+mesh2.add(mesh2logo2)
+mesh2.add(mesh2box)
+mesh2.add(mesh2box2)
+
+const radius = 0.253
+const cylinderOffset = 0.5
+const cylinderGeometry = new THREE.CylinderGeometry(radius, radius, boxDepth, 64, 16)
+
+const addCylinder = (flipX = 1, flipY = 1) => {
+    const mesh2Cylinder = new THREE.Mesh(cylinderGeometry, colorMaterial)
+    mesh2Cylinder.rotation.x = Math.PI * 0.5
+    mesh2Cylinder.position.x = flipX * cylinderOffset
+    mesh2Cylinder.position.y = flipY * cylinderOffset
+
+    mesh2.add(mesh2Cylinder)
+}
+addCylinder(1, 1)
+addCylinder(1, -1)
+addCylinder(-1, 1)
+addCylinder(-1, -1)
+
 const mesh3 = new THREE.Mesh(
     new THREE.TorusKnotGeometry(0.8, 0.35, 256, 64),
     material

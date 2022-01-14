@@ -255,16 +255,56 @@ window.addEventListener('mousemove', (event) => {
     cursor.y = event.clientY / sizes.height - 0.5
 })
 
+let clicked = null
+window.addEventListener('mousedown', (event) => {
+    if (!clicked) {
+        return
+    }
+    const linkedinAddr = "https://www.linkedin.com/in/zach-puller-443982a5/"
+    const gmailAddr = "mailto:zach.puller@gmail.com"
+
+    if (clicked.object.parent === mesh2) {
+        window.open(linkedinAddr)
+    }
+    if (clicked.object.parent === mesh3) {
+        window.open(gmailAddr)
+    }
+})
+
 /**
  * Animate
  */
 const clock = new THREE.Clock()
 let previousTime = 0
 
+const raycaster = new THREE.Raycaster()
+const rayOrigin = new THREE.Vector3(- 3, 10, 0)
+const rayDirection = new THREE.Vector3(10, 10, 0)
+
+raycaster.set(rayOrigin, rayDirection)
+
+/**
+ * Mouse
+ */
+const mouse = new THREE.Vector2()
+
+window.addEventListener('mousemove', (event) => {
+    mouse.x = event.clientX / sizes.width * 2 - 1
+    mouse.y = - (event.clientY / sizes.height) * 2 + 1
+})
+
 const tick = () => {
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
+
+    raycaster.setFromCamera(mouse, camera)
+    const intersects = raycaster.intersectObjects(sectionMeshes)
+
+    clicked = null
+    for (const intersect of intersects) {
+        clicked = intersect
+    }
 
     // Animate camera
     camera.position.y = - scrollY / sizes.height * objectsDistance

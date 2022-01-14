@@ -218,6 +218,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 let scrollY = window.scrollY
 let currentSection = 0
 
+const arrow = document.querySelector('#arrow')
+arrow.addEventListener('mousedown', () => {
+    const bar = document.querySelector('#linkedin').scrollIntoView({ behavior: 'smooth' })
+})
+
 window.addEventListener('scroll', () => {
     scrollY = window.scrollY
     const newSection = Math.round(scrollY / sizes.height)

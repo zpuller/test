@@ -40,7 +40,6 @@ const particlesMaterial = new THREE.PointsMaterial({
     color: parameters.materialColor,
     sizeAttenuation: textureLoader,
     size: 0.02
-
 })
 
 export default {

@@ -39,7 +39,7 @@ const gmColorMat = new THREE.MeshToonMaterial({
 const particlesMaterial = new THREE.PointsMaterial({
     color: parameters.materialColor,
     sizeAttenuation: textureLoader,
-    size: 0.0
+    size: 0.02
 
 })
 
